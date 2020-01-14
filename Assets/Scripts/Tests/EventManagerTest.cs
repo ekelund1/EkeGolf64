@@ -19,26 +19,26 @@ public class EventManagerTest : MonoBehaviour
         while (true)
         {
             yield return waitTime;
-            EventManager.TriggerEvent(GameState.BALL_IN_MOTION);
+            GameStateManager.TriggerEvent(GameState.BALL_IN_MOTION);
             yield return waitTime;
-            EventManager.TriggerEvent(GameState.SETUP_SHOT);
+            GameStateManager.TriggerEvent(GameState.SETUP_SHOT);
             yield return waitTime;
-            EventManager.TriggerEvent(GameState.SHOT_FINISHED);
+            GameStateManager.TriggerEvent(GameState.SHOT_FINISHED);
         }
     }
 
     void OnEnable()
     {
-        EventManager.StartListening(GameState.BALL_IN_MOTION, someListener);
-        EventManager.StartListening(GameState.SETUP_SHOT, SomeOtherFunction);
-        EventManager.StartListening(GameState.SHOT_FINISHED, SomeThirdFunction);
+        GameStateManager.StartListening(GameState.BALL_IN_MOTION, someListener);
+        GameStateManager.StartListening(GameState.SETUP_SHOT, SomeOtherFunction);
+        GameStateManager.StartListening(GameState.SHOT_FINISHED, SomeThirdFunction);
     }
 
     void OnDisable()
     {
-        EventManager.StopListening(GameState.BALL_IN_MOTION, someListener);
-        EventManager.StopListening(GameState.SETUP_SHOT, SomeOtherFunction);
-        EventManager.StopListening(GameState.SHOT_FINISHED, SomeThirdFunction);
+        GameStateManager.StopListening(GameState.BALL_IN_MOTION, someListener);
+        GameStateManager.StopListening(GameState.SETUP_SHOT, SomeOtherFunction);
+        GameStateManager.StopListening(GameState.SHOT_FINISHED, SomeThirdFunction);
     }
 
     void SomeFunction()

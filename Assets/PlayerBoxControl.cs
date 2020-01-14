@@ -7,10 +7,19 @@ public class PlayerBoxControl : MonoBehaviour
     // Start is called before the first frame update
     public float RotateSpeed = 50f;
     public float angle = 30f;
+
+    public Vector3 offset = new Vector3(0, 0, 0);
     public BallTest theBall;
     void Start()
     {
+        GameStateManager.StartListening(GameState.SETUP_SHOT, moveBox);
+        moveBox();
         //transform.localRotation = Quaternion.AngleAxis(angle, Vector3.right);
+    }
+
+    void moveBox()
+    {
+        transform.position = theBall.transform.position - offset;
     }
 
     // Update is called once per frame

@@ -6,8 +6,8 @@ public class AimIndicator : MonoBehaviour
 {
     void OnEnable()
     {
-        EventManager.StartListening(GameState.BALL_IN_MOTION, _disable);
-        EventManager.StartListening(GameState.SETUP_SHOT, _enable);
+        GameStateManager.StartListening(GameState.BALL_IN_MOTION, _disable);
+        GameStateManager.StartListening(GameState.SETUP_SHOT, _enable);
     }
 
     void OnDisable()

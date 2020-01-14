@@ -5,7 +5,8 @@ using UnityEngine;
 public enum CameraTags
 {
     BallCamera,
-    AlignShotCamera
+    AlignShotCamera,
+    HoleCamera,
 }
 public class CameraManager : MonoBehaviour
 {
@@ -14,20 +15,16 @@ public class CameraManager : MonoBehaviour
 
     void Start()
     {
-        EventManager.StartListening(GameState.BALL_IN_MOTION, () =>
+        switchCamera("AlignShotCamera");
+
+        GameStateManager.StartListening(GameState.BALL_IN_MOTION, () =>
         {
             switchCamera("BallCamera");
         });
-        EventManager.StartListening(GameState.SETUP_SHOT, () =>
+        GameStateManager.StartListening(GameState.SETUP_SHOT, () =>
         {
             switchCamera("AlignShotCamera");
         });
-        switchCamera("AlignShotCamera");
-    }
-
-    private void OnGUI()
-    {
-        GUI.Box(new Rect(10, 40, 250, 25), "Camera: " + activeCamera);
     }
 
     private void switchCamera(string tag)
@@ -46,11 +43,11 @@ public class CameraManager : MonoBehaviour
 
     void OnDisable()
     {
-        EventManager.StopListening(GameState.BALL_IN_MOTION, () =>
+        GameStateManager.StopListening(GameState.BALL_IN_MOTION, () =>
         {
             switchCamera("BallCamera");
         });
-        EventManager.StopListening(GameState.SETUP_SHOT, () =>
+        GameStateManager.StopListening(GameState.SETUP_SHOT, () =>
         {
             switchCamera("AlignShotCamera");
         });

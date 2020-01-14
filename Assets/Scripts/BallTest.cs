@@ -18,7 +18,7 @@ public class BallTest : TerrainReader
     protected override void Update()
     {
         base.Update();
-        if (_rb.velocity.magnitude < 0.2f && EventManager.activeEvent == GameState.BALL_IN_MOTION)
+        if (_rb.velocity.magnitude < 0.2f && GameStateManager.activeEvent == GameState.BALL_IN_MOTION)
         {
             this._shotFinished();
         }
@@ -28,7 +28,7 @@ public class BallTest : TerrainReader
     private void _shotFinished()
     {
         _rb.Sleep();
-        EventManager.TriggerEvent(GameState.SETUP_SHOT);
+        GameStateManager.TriggerEvent(GameState.SETUP_SHOT);
     }
 
     private float ImpactDecay()
@@ -79,9 +79,16 @@ public class BallTest : TerrainReader
     }
     public void ShootBall(float power, float angle)
     {
-        _rb.AddRelativeForce(Vector3.forward * power, ForceMode.Impulse);
-        Debug.Log("Ball got force");
-        EventManager.TriggerEvent(GameState.BALL_IN_MOTION);
+
+        float forceZ = Mathf.Cos(angle) * power;
+        float forceY = Mathf.Sin(angle) * power;
+
+        Vector3 force = new Vector3(0, forceY, -forceZ);
+
+        _rb.AddRelativeForce(force, ForceMode.Impulse);
+
+        GameStateManager.TriggerEvent(GameState.BALL_IN_MOTION);
+        CameraEventManager.TriggerEvent(CameraState.BALL_CAMERA);
     }
 
 
