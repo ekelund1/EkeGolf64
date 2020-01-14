@@ -2,126 +2,92 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BallTest : MonoBehaviour
+public class BallTest : TerrainReader
 {
     private Rigidbody _rb;
 
-    public int surfaceIndex = 0;
-    public string surfaceName = "";
-
-    private Terrain terrain;
-    private TerrainData terrainData;
-    private Vector3 terrainPos;
-
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         _rb = GetComponent<Rigidbody>();
-        _rb.velocity = new Vector3(10, 30, 50);
-
-        terrain = Terrain.activeTerrain;
-        terrainData = terrain.terrainData;
-        terrainPos = terrain.transform.position;
-
+        //_rb.velocity = new Vector3(10, 30, 50);
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
-        surfaceIndex = GetMainTexture(transform.position);
-        surfaceName = terrainData.splatPrototypes[surfaceIndex].texture.name;
-
-        if (_rb.velocity.magnitude < 0.1f)
+        base.Update();
+        if (_rb.velocity.magnitude < 0.2f && EventManager.activeEvent == GameState.BALL_IN_MOTION)
         {
-            _rb.Sleep();
+            this._shotFinished();
         }
         // transform.position += new Vector3(-0f, 0, 0.1f);
     }
 
-    private float ImpactObject()
+    private void _shotFinished()
     {
-       switch (surfaceName)
+        _rb.Sleep();
+        EventManager.TriggerEvent(GameState.SETUP_SHOT);
+    }
+
+    private float ImpactDecay()
+    {
+        switch (surfaceName)
         {
             case "fairway":
-                return 0.99f;
+                return 0.97f;
             case "rough":
                 return 0.6f;
             default:
                 return 0.99f;
 
-        }        
+        }
+    }
+
+    private float RollingDecay()
+    {
+        switch (surfaceName)
+        {
+            case "fairway":
+                _rb.angularDrag = 0.6f;
+                return 0.95f;
+            case "rough":
+                _rb.angularDrag = 0.9f;
+                return 0.5f;
+            default:
+                return 0.99f;
+
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.collider.gameObject.tag == "Course")
+        if (collision.collider.gameObject.tag == "Course")
         {
-            _rb.velocity *= this.ImpactObject();
+            _rb.angularDrag = 0.8F;
+            _rb.velocity *= this.ImpactDecay();
         }
-
     }
 
     private void OnCollisionStay(Collision collision)
     {
         if (collision.collider.gameObject.tag == "Course")
         {
-            _rb.velocity *= this.ImpactObject();
+            _rb.velocity *= this.RollingDecay();
         }
     }
-    public void ShootBall(Vector2 angle, float power)
+    public void ShootBall(float power, float angle)
     {
-    }   
+        _rb.AddRelativeForce(Vector3.forward * power, ForceMode.Impulse);
+        Debug.Log("Ball got force");
+        EventManager.TriggerEvent(GameState.BALL_IN_MOTION);
+    }
 
 
     void OnGUI()
     {
-        GUI.Box(new Rect(50, 50, 250, 25), "index: " + surfaceIndex.ToString() + ", name: " + surfaceName);
-        GUI.Box(new Rect(50, 80, 250, 25), "Velocity: " + _rb.velocity.ToString() + ", magnitude: " + _rb.velocity.magnitude);
+        GUI.Box(new Rect(50, 80, 250, 25), "Magnitude: " + _rb.velocity.magnitude + ", surface: " + base.surfaceName.ToString());
     }
 
-    private float[] GetTextureMix(Vector3 WorldPos)
-    {
-        // returns an array containing the relative mix of textures
-        // on the main terrain at this world position.
-
-        // The number of values in the array will equal the number
-        // of textures added to the terrain.
-
-        // calculate which splat map cell the worldPos falls within (ignoring y)
-        int mapX = (int)(((WorldPos.x - terrainPos.x) / terrainData.size.x) * terrainData.alphamapWidth);
-        int mapZ = (int)(((WorldPos.z - terrainPos.z) / terrainData.size.z) * terrainData.alphamapHeight);
-
-        // get the splat data for this cell as a 1x1xN 3d array (where N = number of textures)
-        float[,,] splatmapData = terrainData.GetAlphamaps(mapX, mapZ, 1, 1);
-
-        // extract the 3D array data to a 1D array:
-        float[] cellMix = new float[splatmapData.GetUpperBound(2) + 1];
-
-        for (int n = 0; n < cellMix.Length; n++)
-        {
-            cellMix[n] = splatmapData[0, 0, n];
-        }
-        return cellMix;
-    }
-
-    private int GetMainTexture(Vector3 WorldPos)
-    {
-        // returns the zero-based index of the most dominant texture
-        // on the main terrain at this world position.
-        float[] mix = GetTextureMix(WorldPos);
-
-        float maxMix = 0;
-        int maxIndex = 0;
-
-        // loop through each mix value and find the maximum
-        for (int n = 0; n < mix.Length; n++)
-        {
-            if (mix[n] > maxMix)
-            {
-                maxIndex = n;
-                maxMix = mix[n];
-            }
-        }
-        return maxIndex;
-    }
 }

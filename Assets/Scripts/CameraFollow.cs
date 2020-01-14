@@ -9,7 +9,7 @@ public class CameraFollow : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -18,9 +18,6 @@ public class CameraFollow : MonoBehaviour
         Vector3 lookOnObject = ballObject.position - transform.position;
         lookOnObject = ballObject.position - transform.position;
         transform.forward = lookOnObject.normalized;
-
-        
-
         distanceFromBall = Mathf.Max(ballObject.GetComponent<Rigidbody>().velocity.magnitude, 20f);
 
         Vector3 playerLastPosition;
