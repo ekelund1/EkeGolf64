@@ -11,7 +11,20 @@ public class BallTest : TerrainReader
     {
         base.Start();
         _rb = GetComponent<Rigidbody>();
-        //_rb.velocity = new Vector3(10, 30, 50);
+        disable();
+        GameStateManager.StartListening(GameState.BALL_IN_MOTION, enable);
+        GameStateManager.StartListening(GameState.SETUP_SHOT, disable);
+    }
+
+    public void disable()
+    {
+        _rb.detectCollisions = false;
+        _rb.useGravity = false;
+    }
+    public void enable()
+    {
+        _rb.detectCollisions = true;
+        _rb.useGravity = true;
     }
 
     // Update is called once per frame
@@ -79,7 +92,6 @@ public class BallTest : TerrainReader
     }
     public void ShootBall(float power, float angle)
     {
-
         float forceZ = Mathf.Cos(angle) * power;
         float forceY = Mathf.Sin(angle) * power;
 
