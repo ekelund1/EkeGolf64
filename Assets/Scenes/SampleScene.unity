@@ -519,7 +519,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &524234071
 RectTransform:
   m_ObjectHideFlags: 0
@@ -557,7 +557,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b8676d81d4ac12c478caff22dd351669, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1cb32453fc1583447bc78290369f43b2, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -585,8 +585,6 @@ GameObject:
   m_Component:
   - component: {fileID: 705507995}
   - component: {fileID: 705507994}
-  - component: {fileID: 705507997}
-  - component: {fileID: 705507996}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -668,30 +666,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!114 &705507996
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 705507993}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b9e93d766c67884fb78e0964918c21a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &705507997
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 705507993}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b9e93d766c67884fb78e0964918c21a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &920334755
 GameObject:
   m_ObjectHideFlags: 0
@@ -828,7 +802,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &936370936
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1573,6 +1547,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9490e295d9907f44d9aa1373d2bb816c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  clubDisplay: {fileID: 2800000, guid: c15d98d888a6e544cbec36f8c85cf835, type: 3}
+  player: {fileID: 1707921916}
 --- !u!1 &1745465608
 GameObject:
   m_ObjectHideFlags: 0

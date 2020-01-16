@@ -29,11 +29,6 @@ public class PlayerBoxControl : MonoBehaviour
         transform.position = theBall.transform.position - offset;
     }
 
-    private void DisplayClub()
-    {
-        GUI.Box(new Rect(1000, 80, 250, 25), "Club: " + selectedClub);
-
-    }
     private void ChangeClub(bool up = false)
     {
         if (up)
@@ -44,10 +39,7 @@ public class PlayerBoxControl : MonoBehaviour
         selectedClub = (Clubs)Mathf.Clamp((float)selectedClub - 1, 0, 13);
 
     }
-    void OnGUI()
-    {
-        DisplayClub();
-    }
+
     // Update is called once per frame
     void Update()
     {
