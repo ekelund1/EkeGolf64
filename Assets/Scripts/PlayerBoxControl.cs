@@ -13,6 +13,8 @@ public class PlayerBoxControl : MonoBehaviour
 
     public float playerMaxPower = 20f;
 
+    public GameObject aimIndicator;
+
     public Clubs selectedClub = Clubs.W1;
 
     public Vector3 offset = new Vector3(0, 0, 0);
@@ -27,6 +29,7 @@ public class PlayerBoxControl : MonoBehaviour
     void moveBox()
     {
         transform.position = theBall.transform.position - offset;
+        transform.rotation = theBall.transform.rotation;
     }
 
     private void ChangeClub(bool up = false)
@@ -34,8 +37,28 @@ public class PlayerBoxControl : MonoBehaviour
         if (up)
         {
             selectedClub = (Clubs)Mathf.Clamp((float)selectedClub + 1, 0, 13);
+            aimIndicator.transform.eulerAngles = new Vector3(
+                   90,
+                    aimIndicator.transform.eulerAngles.y,
+                    aimIndicator.transform.eulerAngles.z);
+            aimIndicator.transform.eulerAngles =
+                new Vector3(
+                    90 - ClubDictionary.getClubData(selectedClub).angle,
+                    aimIndicator.transform.eulerAngles.y,
+                    aimIndicator.transform.eulerAngles.z
+            );
+            //aimIndicator.transform.Rotate(new Vector3(ClubDictionary.getClubData(selectedClub).angle, 0, 0));
             return;
         }
+        aimIndicator.transform.eulerAngles = new Vector3(
+                           90,
+                            aimIndicator.transform.eulerAngles.y,
+                            aimIndicator.transform.eulerAngles.z); aimIndicator.transform.eulerAngles =
+                 new Vector3(
+                     90 - ClubDictionary.getClubData(selectedClub).angle,
+                     aimIndicator.transform.eulerAngles.y,
+                     aimIndicator.transform.eulerAngles.z
+             );
         selectedClub = (Clubs)Mathf.Clamp((float)selectedClub - 1, 0, 13);
 
     }
@@ -79,7 +102,11 @@ public class PlayerBoxControl : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            theBall.ShootBall(20, 10);
+            theBall.ShootBall(20, selectedClub, this.transform.rotation);
         }
+    }
+    private void OnGUI()
+    {
+        GUI.Box(new Rect(400, 800, 150, 20), this.transform.rotation.ToString());
     }
 }

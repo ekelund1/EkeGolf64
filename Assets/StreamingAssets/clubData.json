@@ -1,0 +1,89 @@
+﻿{
+  "clubdata": [
+    {
+      "club": 0,
+      "angle": 1,
+      "accuracy": 1,
+      "powerLossRatio": 1,
+      "constantPower": 4
+    },
+    {
+      "club": 1,
+      "angle": 54,
+      "accuracy": 0.9,
+      "powerLossRatio": 0.3
+    },
+    {
+      "club": 2,
+      "angle": 48,
+      "accuracy": 0.9,
+      "powerLossRatio": 0.38
+    },
+    {
+      "club": 3,
+      "angle": 42,
+      "accuracy": 0.84,
+      "powerLossRatio": 0.48
+    },
+    {
+      "club": 4,
+      "angle": 38,
+      "accuracy": 0.82,
+      "powerLossRatio": 0.52
+    },
+    {
+      "club": 5,
+      "angle": 34,
+      "accuracy": 0.8,
+      "powerLossRatio": 0.56
+    },
+    {
+      "club": 6,
+      "angle": 30,
+      "accuracy": 0.78,
+      "powerLossRatio": 0.6
+    },
+    {
+      "club": 7,
+      "angle": 27,
+      "accuracy": 0.76,
+      "powerLossRatio": 0.65
+    },
+    {
+      "club": 8,
+      "angle": 24,
+      "accuracy": 0.74,
+      "powerLossRatio": 0.7
+    },
+    {
+      "club": 9,
+      "angle": 21,
+      "accuracy": 0.72,
+      "powerLossRatio": 0.75
+    },
+    {
+      "club": 10,
+      "angle": 18.5,
+      "accuracy": 0.7,
+      "powerLossRatio": 0.8
+    },
+    {
+      "club": 11,
+      "angle": 15,
+      "accuracy": 0.65,
+      "powerLossRatio": 0.87
+    },
+    {
+      "club": 12,
+      "angle": 13,
+      "accuracy": 0.6,
+      "powerLossRatio": 0.92
+    },
+    {
+      "club": 13,
+      "angle": 10,
+      "accuracy": 0.5,
+      "powerLossRatio": 1
+    }
+  ]
+}

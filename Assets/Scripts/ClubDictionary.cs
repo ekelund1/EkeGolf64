@@ -1,42 +1,79 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 public enum Clubs
 {
     PUTTER, SW, PW, I9, I8, I7, I6, I5, I4, I3, I2, W4, W3, W1,
 }
-public class ClubDictionary : MonoBehaviour
-{
-    private Dictionary<Clubs, ClubData> dict = new Dictionary<Clubs, ClubData>();
 
-    public ClubData getClubData(Clubs club)
+
+static class ClubDictionary
+{
+    private static string jsonFileName = "clubData.json";
+    static Dictionary<Clubs, ClubData> dict = new Dictionary<Clubs, ClubData>();
+
+    static ClubDictionary()
+    {
+        string file = Path.Combine(Application.streamingAssetsPath, jsonFileName);
+
+        if (File.Exists(file))
+        {
+            string dataAsJson = File.ReadAllText(file);
+
+            ClubDataHolder data = JsonUtility.FromJson<ClubDataHolder>(dataAsJson);
+
+            for (int i = 0; i < data.clubdata.Count; i++)
+            {
+                Debug.Log(data.clubdata[i].ToString());
+            }
+
+            foreach (ClubData clubData in data.clubdata)
+            {
+                dict.Add(clubData.club, clubData);
+            }
+            Debug.Log("ClubDictionary loaded");
+
+        }
+        else
+        {
+            Debug.Log("Could not load file and ClubData");
+
+        }
+
+
+
+        //Application.persistentDataPath + "/clubData.json");
+
+
+        Debug.Log("Club dict size:" + dict.Count.ToString());
+    }
+    public static ClubData getClubData(Clubs club)
     {
         return dict[club];
     }
-    void Start()
-    {
-        foreach (Clubs club in (Clubs[])Clubs.GetValues(typeof(Clubs)))
-        {
-            dict.Add(club, new ClubData(club, 1f, 1f, 1f));
-        }
-        Debug.Log("Club dict size:" + dict.Count.ToString());
-    }
+
 }
+
+[System.Serializable]
+public class ClubDataHolder
+{
+    public List<ClubData> clubdata;
+}
+
+[System.Serializable]
 
 public class ClubData
 {
-    public Clubs club { get; }
-    public float angle { get; }
-    public float accuracy { get; }
-    public float powerLossRatio { get; }
-    public float constantPower { get; }
+    public Clubs club;
+    public float angle;
+    public float accuracy;
+    public float powerLossRatio;
+    public float constantPower;
 
-    public ClubData(Clubs _club, float _angle, float _accuracy, float _powerLossRatio, float _constantPower = 0)
+
+    public override string ToString()
     {
-        club = _club;
-        angle = _angle;
-        accuracy = _accuracy;
-        powerLossRatio = _powerLossRatio;
-        constantPower = _constantPower;
+        return "(" + club + ", " + angle + ", " + accuracy + ", " + powerLossRatio + ")";
     }
 }
