@@ -13,12 +13,17 @@ public class PlayerBoxControl : MonoBehaviour
 
     public float playerMaxPower = 20f;
 
+    public float currentPower = 1f;
+    public float maxPower = 1f;
+    public float minPower = 0.1f;
     public GameObject aimIndicator;
 
     public Clubs selectedClub = Clubs.W1;
 
     public Vector3 offset = new Vector3(0, 0, 0);
     public BallTest theBall;
+
+    public SwingManager swingManager;
     void Start()
     {
         GameStateManager.StartListening(GameState.SETUP_SHOT, moveBox);
@@ -37,29 +42,33 @@ public class PlayerBoxControl : MonoBehaviour
         if (up)
         {
             selectedClub = (Clubs)Mathf.Clamp((float)selectedClub + 1, 0, 13);
-            aimIndicator.transform.eulerAngles = new Vector3(
-                   90,
-                    aimIndicator.transform.eulerAngles.y,
-                    aimIndicator.transform.eulerAngles.z);
+
             aimIndicator.transform.eulerAngles =
                 new Vector3(
-                    90 - ClubDictionary.getClubData(selectedClub).angle,
+                     -ClubDictionary.getClubData(selectedClub).angle,
                     aimIndicator.transform.eulerAngles.y,
                     aimIndicator.transform.eulerAngles.z
             );
             //aimIndicator.transform.Rotate(new Vector3(ClubDictionary.getClubData(selectedClub).angle, 0, 0));
             return;
         }
-        aimIndicator.transform.eulerAngles = new Vector3(
-                           90,
-                            aimIndicator.transform.eulerAngles.y,
-                            aimIndicator.transform.eulerAngles.z); aimIndicator.transform.eulerAngles =
-                 new Vector3(
-                     90 - ClubDictionary.getClubData(selectedClub).angle,
-                     aimIndicator.transform.eulerAngles.y,
-                     aimIndicator.transform.eulerAngles.z
-             );
+
+        aimIndicator.transform.eulerAngles = new Vector3(-ClubDictionary.getClubData(selectedClub).angle, aimIndicator.transform.eulerAngles.y, aimIndicator.transform.eulerAngles.z);
         selectedClub = (Clubs)Mathf.Clamp((float)selectedClub - 1, 0, 13);
+
+    }
+
+    private void ChangePower(bool up = true)
+    {
+        if (up)
+        {
+            currentPower += Time.deltaTime;
+        }
+        else
+        {
+            currentPower -= Time.deltaTime;
+        }
+        currentPower = Mathf.Clamp(currentPower, minPower, maxPower);
 
     }
 
@@ -94,19 +103,30 @@ public class PlayerBoxControl : MonoBehaviour
             ChangeClub(true);
         }
 
+        if (Input.GetKey(KeyCode.Home))
+        {
+            ChangePower(true);
+        }
+        if (Input.GetKey(KeyCode.End))
+        {
+            ChangePower(false);
+        }
+
         if (Input.GetKeyDown(KeyCode.R))
         {
             theBall.GetComponent<Rigidbody>().Sleep();
             theBall.transform.position = transform.position;
             theBall.transform.localRotation = transform.rotation;
         }
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && GameStateManager.activeEvent == GameState.SETUP_SHOT)
         {
-            theBall.ShootBall(20, selectedClub, this.transform.rotation);
+            var swing = swingManager.ButtonPressed();
+
+            if (swing.powerModifier > 0 && swing.accuracy > 0)
+                theBall.ShootBall(20, selectedClub, this.transform.rotation, swing.powerModifier);
         }
+
+
     }
-    private void OnGUI()
-    {
-        GUI.Box(new Rect(400, 800, 150, 20), this.transform.rotation.ToString());
-    }
+
 }

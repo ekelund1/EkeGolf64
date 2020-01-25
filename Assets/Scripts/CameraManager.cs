@@ -7,6 +7,8 @@ public enum CameraTags
     BallCamera,
     AlignShotCamera,
     HoleCamera,
+    WinCamera,
+    LookAtHoleCamera,
 }
 public class CameraManager : MonoBehaviour
 {
@@ -24,6 +26,23 @@ public class CameraManager : MonoBehaviour
         GameStateManager.StartListening(GameState.SETUP_SHOT, () =>
         {
             switchCamera("AlignShotCamera");
+        });
+        GameStateManager.StartListening(GameState.BALL_IN_HOLE, () =>
+        {
+            switchCamera("WinCamera");
+        });
+        GameStateManager.StartListening(GameState.SHOT_FINISHED, () =>
+        {
+            switchCamera("LookAtHoleCamera");
+        });
+
+        CameraEventManager.StartListening(CameraState.HOLE_CAMERA, () =>
+        {
+            switchCamera("HoleCamera");
+        });
+        CameraEventManager.StartListening(CameraState.BALL_CAMERA, () =>
+        {
+            switchCamera("BallCamera");
         });
     }
 

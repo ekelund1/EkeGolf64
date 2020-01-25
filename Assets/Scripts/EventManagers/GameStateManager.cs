@@ -8,6 +8,10 @@ public enum GameState
     BALL_IN_MOTION,
     SETUP_SHOT,
     SHOT_FINISHED,
+    WIN_FINISHED,
+    BALL_IN_HOLE,
+    SWINGING,
+    SWING_FINISHED,
 }
 
 

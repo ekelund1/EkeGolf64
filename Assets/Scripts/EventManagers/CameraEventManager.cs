@@ -9,6 +9,8 @@ public enum CameraState
     FREE_CAMERA,
     BALL_CAMERA,
     ALIGN_SHOT_CAMERA,
+    WIN_CAMERA,
+    LOOK_AT_HOLE_CAMERA,
 }
 public class CameraEventManager : MonoBehaviour
 {
@@ -41,7 +43,7 @@ public class CameraEventManager : MonoBehaviour
 
     private void OnGUI()
     {
-        GUI.Box(new Rect(10, 10, 250, 25), "CameraState: " + _activeCameraState);
+        GUI.Box(new Rect(900, 10, 250, 25), "CameraState: " + _activeCameraState);
     }
 
     public static CameraState activeEvent
@@ -98,11 +100,8 @@ public class CameraEventManager : MonoBehaviour
         {
             thisEvent.Invoke();
             //instance.eventDictionary[eventName]();
+            _activeCameraState = eventName;
 
-            if (isGameState)
-            {
-                _activeCameraState = eventName;
-            }
         }
     }
 }

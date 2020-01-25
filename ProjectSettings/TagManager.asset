@@ -7,6 +7,10 @@ TagManager:
   - Course
   - AlignShotCamera
   - BallCamera
+  - HoleCamera
+  - WinCamera
+  - LookAtHoleCamera
+  - TheHole
   layers:
   - Default
   - TransparentFX
@@ -41,6 +45,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Test
+    uniqueID: 4019376681
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

@@ -9,6 +9,9 @@ public class BallTest : TerrainReader
     public GameObject theHole;
 
     public Vector3 startPos;
+
+    public float shotTimer = 0;
+    public float onGroundTimer = 0;
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -36,14 +39,20 @@ public class BallTest : TerrainReader
     protected override void Update()
     {
         base.Update();
-        if (_rb.velocity.magnitude < 0.2f && GameStateManager.activeEvent == GameState.BALL_IN_MOTION)
+        if (GameStateManager.activeEvent == GameState.BALL_IN_MOTION)
+            shotTimer += Time.deltaTime;
+
+        if (shotTimer > 0.5f)
         {
-            this._shotFinished();
-        }
-        if (transform.position.y < 0)
-        {
-            this._shotFinished();
-            this._respawn();
+            if (_rb.velocity.magnitude < 0.2f && GameStateManager.activeEvent == GameState.BALL_IN_MOTION)
+            {
+                this._shotFinished();
+            }
+            if (transform.position.y < 0)
+            {
+                this._shotFinished();
+                this._respawn();
+            }
         }
         // transform.position += new Vector3(-0f, 0, 0.1f);
     }
@@ -51,7 +60,8 @@ public class BallTest : TerrainReader
     private void _shotFinished()
     {
         _rb.Sleep();
-        GameStateManager.TriggerEvent(GameState.SETUP_SHOT);
+        GameStateManager.TriggerEvent(GameState.SHOT_FINISHED);
+        shotTimer = 0;
     }
 
     private float ImpactDecay()
@@ -104,21 +114,27 @@ public class BallTest : TerrainReader
         {
             _rb.velocity *= this.RollingDecay();
         }
+        onGroundTimer += Time.deltaTime;
     }
 
-    public static Vector3 calculateForce(ClubData club, float power)
+    void OnCollisionExit(Collision other)
     {
-        float forceZ = power * club.powerLossRatio;
+        onGroundTimer = 0;
+    }
+
+    public static Vector3 calculateForce(ClubData club, float power, float powerModifier)
+    {
+        float forceZ = power * club.powerLossRatio * powerModifier;
 
         if (club.constantPower > 0)
         {
-            forceZ = club.constantPower;
+            forceZ = club.constantPower * powerModifier;
         }
-        float forceY = Mathf.Sin(club.angle / 90) * power * club.powerLossRatio;
+        float forceY = Mathf.Sin(club.angle / 90) * power * club.powerLossRatio * powerModifier;
         return new Vector3(0, forceY, forceZ);
     }
 
-    public void ShootBall(float power, Clubs club, Quaternion angle)
+    public void ShootBall(float power, Clubs club, Quaternion angle, float powerModifier)
     {
         this.startPos = transform.position;
 
@@ -131,12 +147,12 @@ public class BallTest : TerrainReader
         Debug.Log("Loaded club " + cb.ToString());
 
 
-        Vector3 force = calculateForce(cb, power);
+        Vector3 force = calculateForce(cb, power, powerModifier);
 
         _rb.AddRelativeForce(force, ForceMode.Impulse);
-
         GameStateManager.TriggerEvent(GameState.BALL_IN_MOTION);
-        CameraEventManager.TriggerEvent(CameraState.BALL_CAMERA);
+
+        //CameraEventManager.TriggerEvent(CameraState.BALL_CAMERA);
     }
 
     private void _resetRotation()
@@ -148,6 +164,7 @@ public class BallTest : TerrainReader
     private void _respawn()
     {
         this.transform.position = startPos;
+        shotTimer = 0;
     }
 
     void OnGUI()
